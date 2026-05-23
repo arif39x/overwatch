@@ -1,0 +1,12 @@
+- language: go
+  kind: function_call
+  identifier: html.EscapeString
+- language: go
+  kind: function_call
+  identifier: sqlx.Rebind
+- language: python
+  kind: function_call
+  identifier: shlex.quote
+- language: javascript
+  kind: function_call
+  identifier: validator.escape
