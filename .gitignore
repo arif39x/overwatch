@@ -1,3 +1,5 @@
+# Security and Sensitive Data
+Book/
 .env
 *.env
 config/secrets.json
@@ -8,14 +10,20 @@ auth.json
 *.crt
 *.p12
 *.pfx
+
+# Databases and Local Storage
 *.sqlite
 *.sqlite3
 *.db
 *.db-journal
 *.db-shm
 *.db-wal
+
+# Dependencies
 node_modules/
 vendor/
+
+# Local Tooling and IDEs
 .gemini/
 .idea/
 .vscode/
@@ -25,6 +33,8 @@ vendor/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Build Artifacts and Temp Files
 bin/
 **/target/
 build/
