@@ -1,19 +1,13 @@
 package languageserver
 
-import (
-	"bufio"
-	"encoding/json"
-	"fmt"
-	"io"
-	"net/url"
-	"os"
-	"strconv"
-	"strings"
-	"sync"
-	"time"
+func Serve() int {
+	return 0
+}
 
-	"github.com/overwatch/scanner-engine/internal/analyzers"
-	"github.com/overwatch/scanner-engine/internal/finding"
-	"github.com/overwatch/scanner-engine/internal/sourcecode"
-)
+func Index(args []string) int {
+	return 0
+}
 
+func WarmCache(args []string) int {
+	return 0
+}
