@@ -18,7 +18,7 @@ func (a *RubySQLIAnalyzer) SupportedLanguages() []string {
 	return []string{"ruby"}
 }
 
-func (a *RubySQLIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *RubySQLIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "RUBY-SQLI-001"
 		name     = "Ruby SQL Injection"

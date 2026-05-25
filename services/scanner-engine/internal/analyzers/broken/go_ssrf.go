@@ -18,7 +18,7 @@ func (a *GoSSRFAnalyzer) SupportedLanguages() []string {
 	return []string{"go"}
 }
 
-func (a *GoSSRFAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *GoSSRFAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "GO-SSRF-001"
 		name     = "Go SSRF"

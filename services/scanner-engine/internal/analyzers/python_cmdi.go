@@ -20,7 +20,7 @@ func (a *PythonCMDIAnalyzer) SupportedLanguages() []string {
 	return []string{"python"}
 }
 
-func (a *PythonCMDIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *PythonCMDIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	findings := make([]finding.Finding, 0)
 	if node == nil {
 		return findings

@@ -18,7 +18,7 @@ func (a *PythonSSRFAnalyzer) SupportedLanguages() []string {
 	return []string{"python"}
 }
 
-func (a *PythonSSRFAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *PythonSSRFAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "PY-SSRF-001"
 		name     = "Python SSRF"

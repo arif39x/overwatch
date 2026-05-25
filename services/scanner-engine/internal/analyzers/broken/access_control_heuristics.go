@@ -18,7 +18,7 @@ func (a *AccessControlAnalyzer) SupportedLanguages() []string {
 	return []string{"go"}
 }
 
-func (a *AccessControlAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *AccessControlAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	findings := make([]finding.Finding, 0)
 	taintedVars := sourcecode.GlobalTaintEngine.AnalyzeTaint(node, source, "go")
 
@@ -29,5 +29,3 @@ func (a *AccessControlAnalyzer) Analyze(node *sitter.Node, source []byte, filePa
 		}
 
 		content := n.Content(source)
-		
-		

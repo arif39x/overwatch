@@ -16,7 +16,7 @@ func (a *PHPXSSAnalyzer) SupportedLanguages() []string {
 	return []string{"php"}
 }
 
-func (a *PHPXSSAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *PHPXSSAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "PHP-XSS-001"
 		name     = "Cross-Site Scripting (PHP)"

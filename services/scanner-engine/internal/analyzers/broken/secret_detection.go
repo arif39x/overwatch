@@ -18,7 +18,7 @@ func (a *SecretAnalyzer) SupportedLanguages() []string {
 	return []string{"go"}
 }
 
-func (a *SecretAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *SecretAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "GEN-SECRET-001"
 		name     = "Hardcoded Secret"

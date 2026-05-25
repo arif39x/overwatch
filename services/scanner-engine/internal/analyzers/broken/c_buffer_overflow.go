@@ -17,7 +17,7 @@ func (a *CBufferOverflowAnalyzer) SupportedLanguages() []string {
 	return []string{"c", "cpp"}
 }
 
-func (a *CBufferOverflowAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *CBufferOverflowAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "C-BOF-001"
 		name     = "C/C++ Buffer Overflow"

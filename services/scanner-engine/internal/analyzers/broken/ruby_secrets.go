@@ -18,7 +18,7 @@ func (a *RubySecretAnalyzer) SupportedLanguages() []string {
 	return []string{"ruby"}
 }
 
-func (a *RubySecretAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *RubySecretAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "RUBY-SECRET-001"
 		name     = "Hardcoded Secret (Ruby)"

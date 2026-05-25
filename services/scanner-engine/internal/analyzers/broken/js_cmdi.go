@@ -18,7 +18,7 @@ func (a *JSCMDIAnalyzer) SupportedLanguages() []string {
 	return []string{"javascript", "typescript"}
 }
 
-func (a *JSCMDIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *JSCMDIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "JS-CMDI-001"
 		name     = "JavaScript Command Injection"

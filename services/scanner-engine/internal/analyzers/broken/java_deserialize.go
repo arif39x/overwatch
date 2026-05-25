@@ -16,7 +16,7 @@ func (a *JavaDeserializeAnalyzer) SupportedLanguages() []string {
 	return []string{"java"}
 }
 
-func (a *JavaDeserializeAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *JavaDeserializeAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "JAVA-DESER-001"
 		name     = "Java Unsafe Deserialization"

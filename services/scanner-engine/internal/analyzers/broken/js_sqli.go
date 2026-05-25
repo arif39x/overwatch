@@ -18,7 +18,7 @@ func (a *JSSQLIAnalyzer) SupportedLanguages() []string {
 	return []string{"javascript", "typescript"}
 }
 
-func (a *JSSQLIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *JSSQLIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "JS-SQLI-001"
 		name     = "JavaScript SQL Injection"

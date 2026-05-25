@@ -18,7 +18,7 @@ func (a *RustTransmuteAnalyzer) SupportedLanguages() []string {
 	return []string{"rust"}
 }
 
-func (a *RustTransmuteAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *RustTransmuteAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "RUST-TRANSMUTE-001"
 		name     = "Rust Dangerous Transmute"

@@ -81,6 +81,7 @@ func runScan(args []string) int {
 	output := command.String("output", "", "Optional output file")
 	rulesDir := command.String("rules", "internal/rules", "Path to taint rules directory")
 	local := command.Bool("local", false, "Run in Lite mode (no Redis/Postgres)")
+	noSemantic := command.Bool("no-semantic", false, "Disable semantic analysis pass")
 
 	if err := command.Parse(args); err != nil {
 		fmt.Fprintf(os.Stderr, "parse scan flags: %v\n", err)
@@ -95,6 +96,10 @@ func runScan(args []string) int {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "scan walk failed: %v\n", err)
 		return 2
+	}
+
+	if !*noSemantic {
+		sourcecode.ExtractSemantics(files)
 	}
 
 	findings := analyzers.RunAll(files)
@@ -232,6 +237,7 @@ func runCI(args []string) int {
 	failOn := command.String("fail-on", "HIGH", "Severity threshold to fail the scan")
 	format := command.String("format", "json", "Output format (json or sarif)")
 	rulesDir := command.String("rules", "internal/rules", "Path to taint rules directory")
+	noSemantic := command.Bool("no-semantic", false, "Disable semantic analysis pass")
 
 	if err := command.Parse(args); err != nil {
 		fmt.Fprintf(os.Stderr, "parse ci flags: %v\n", err)
@@ -246,6 +252,10 @@ func runCI(args []string) int {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "ci walk failed: %v\n", err)
 		return 2
+	}
+
+	if !*noSemantic {
+		sourcecode.ExtractSemantics(files)
 	}
 
 	findings := analyzers.RunAll(files)

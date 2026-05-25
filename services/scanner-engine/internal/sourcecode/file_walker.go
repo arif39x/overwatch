@@ -8,10 +8,11 @@ import (
 )
 
 type File struct {
-	Path     string
-	Content  []byte
-	Language string
-	AST      *sitter.Node
+	Path      string
+	Content   []byte
+	Language  string
+	AST       *sitter.Node
+	Semantics *SemanticData
 }
 
 func Walk(root string) ([]*File, error) {

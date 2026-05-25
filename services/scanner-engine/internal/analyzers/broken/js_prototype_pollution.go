@@ -18,7 +18,7 @@ func (a *JSPrototypePollutionAnalyzer) SupportedLanguages() []string {
 	return []string{"javascript", "typescript"}
 }
 
-func (a *JSPrototypePollutionAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *JSPrototypePollutionAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "JS-PROTO-001"
 		name     = "JavaScript Prototype Pollution"

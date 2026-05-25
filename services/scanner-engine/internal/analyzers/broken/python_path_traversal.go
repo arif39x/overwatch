@@ -18,7 +18,7 @@ func (a *PythonPathTraversalAnalyzer) SupportedLanguages() []string {
 	return []string{"python"}
 }
 
-func (a *PythonPathTraversalAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *PythonPathTraversalAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "PY-PATH-001"
 		name     = "Python Path Traversal"

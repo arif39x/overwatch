@@ -16,7 +16,7 @@ func (a *PHPCmdIAnalyzer) SupportedLanguages() []string {
 	return []string{"php"}
 }
 
-func (a *PHPCmdIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *PHPCmdIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "PHP-CMDI-001"
 		name     = "Command Injection (PHP)"

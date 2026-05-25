@@ -18,7 +18,7 @@ func (a *JSSecretsAnalyzer) SupportedLanguages() []string {
 	return []string{"javascript", "typescript"}
 }
 
-func (a *JSSecretsAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *JSSecretsAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "JS-SECRET-001"
 		name     = "Hardcoded Secret"

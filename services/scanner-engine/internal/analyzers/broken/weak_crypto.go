@@ -18,7 +18,7 @@ func (a *WeakCryptoAnalyzer) SupportedLanguages() []string {
 	return []string{"go"}
 }
 
-func (a *WeakCryptoAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *WeakCryptoAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "GO-CRYPTO-001"
 		name     = "Weak Cryptographic Algorithm"

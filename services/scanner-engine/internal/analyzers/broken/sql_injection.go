@@ -18,7 +18,7 @@ func (a *SQLIAnalyzer) SupportedLanguages() []string {
 	return []string{"go"}
 }
 
-func (a *SQLIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *SQLIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "GO-SQLI-001"
 		name     = "Potential SQL Injection"

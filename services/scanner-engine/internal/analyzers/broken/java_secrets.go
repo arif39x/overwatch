@@ -18,7 +18,7 @@ func (a *JavaSecretsAnalyzer) SupportedLanguages() []string {
 	return []string{"java"}
 }
 
-func (a *JavaSecretsAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *JavaSecretsAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "JAVA-SECRET-001"
 		name     = "Java Hardcoded Secret"

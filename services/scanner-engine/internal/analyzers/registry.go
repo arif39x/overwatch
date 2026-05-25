@@ -16,9 +16,12 @@ func Register(a Analyzer) {
 func RunAll(files []*sourcecode.File) []finding.Finding {
 	var allFindings []finding.Finding
 	for _, f := range files {
+		var st *sourcecode.SymbolTable
+		if f.Semantics != nil {
+			st = f.Semantics.SymbolTable
+		}
 		for _, a := range registry {
-			
-			findings := a.Analyze(f.AST, f.Content, f.Path)
+			findings := a.Analyze(f.AST, f.Content, f.Path, st)
 			allFindings = append(allFindings, findings...)
 		}
 	}

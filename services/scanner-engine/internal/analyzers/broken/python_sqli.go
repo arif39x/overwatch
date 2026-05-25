@@ -18,7 +18,7 @@ func (a *PythonSQLIAnalyzer) SupportedLanguages() []string {
 	return []string{"python"}
 }
 
-func (a *PythonSQLIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *PythonSQLIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "PY-SQLI-001"
 		name     = "Python SQL Injection"

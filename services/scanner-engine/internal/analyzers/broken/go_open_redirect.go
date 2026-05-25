@@ -18,7 +18,7 @@ func (a *GoOpenRedirectAnalyzer) SupportedLanguages() []string {
 	return []string{"go"}
 }
 
-func (a *GoOpenRedirectAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *GoOpenRedirectAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "GO-OR-001"
 		name     = "Go Open Redirect"

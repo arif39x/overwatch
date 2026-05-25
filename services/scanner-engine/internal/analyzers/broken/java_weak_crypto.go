@@ -18,7 +18,7 @@ func (a *JavaWeakCryptoAnalyzer) SupportedLanguages() []string {
 	return []string{"java"}
 }
 
-func (a *JavaWeakCryptoAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *JavaWeakCryptoAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "JAVA-CRYPTO-001"
 		name     = "Java Weak Cryptographic Algorithm"

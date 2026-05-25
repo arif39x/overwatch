@@ -16,7 +16,7 @@ func (a *PHPFileInclusionAnalyzer) SupportedLanguages() []string {
 	return []string{"php"}
 }
 
-func (a *PHPFileInclusionAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *PHPFileInclusionAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "PHP-LFI-001"
 		name     = "File Inclusion (PHP)"

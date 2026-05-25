@@ -18,7 +18,7 @@ func (a *PythonDeserializeAnalyzer) SupportedLanguages() []string {
 	return []string{"python"}
 }
 
-func (a *PythonDeserializeAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *PythonDeserializeAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "PY-DESER-001"
 		name     = "Python Unsafe Deserialization"

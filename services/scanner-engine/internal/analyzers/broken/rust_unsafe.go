@@ -16,7 +16,7 @@ func (a *RustUnsafeAnalyzer) SupportedLanguages() []string {
 	return []string{"rust"}
 }
 
-func (a *RustUnsafeAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *RustUnsafeAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "RUST-UNSAFE-001"
 		name     = "Rust Unsafe Block with Raw Pointer Dereference"

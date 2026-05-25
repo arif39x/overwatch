@@ -18,7 +18,7 @@ func (a *RustSQLIAnalyzer) SupportedLanguages() []string {
 	return []string{"rust"}
 }
 
-func (a *RustSQLIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *RustSQLIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "RUST-SQLI-001"
 		name     = "Rust SQL Injection"

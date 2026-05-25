@@ -16,7 +16,7 @@ func (a *GoTLSConfigAnalyzer) SupportedLanguages() []string {
 	return []string{"go"}
 }
 
-func (a *GoTLSConfigAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *GoTLSConfigAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "GO-TLS-001"
 		name     = "Go Insecure TLS Configuration"

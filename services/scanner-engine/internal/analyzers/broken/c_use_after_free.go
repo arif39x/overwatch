@@ -16,7 +16,7 @@ func (a *CUseAfterFreeAnalyzer) SupportedLanguages() []string {
 	return []string{"c", "cpp"}
 }
 
-func (a *CUseAfterFreeAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *CUseAfterFreeAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "C-UAF-001"
 		name     = "C/C++ Use After Free"

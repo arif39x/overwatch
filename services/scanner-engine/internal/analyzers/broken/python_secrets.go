@@ -18,7 +18,7 @@ func (a *PythonSecretsAnalyzer) SupportedLanguages() []string {
 	return []string{"python"}
 }
 
-func (a *PythonSecretsAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *PythonSecretsAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "PY-SECRET-001"
 		name     = "Hardcoded Secret"

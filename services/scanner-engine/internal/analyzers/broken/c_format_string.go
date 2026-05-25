@@ -17,7 +17,7 @@ func (a *CFormatStringAnalyzer) SupportedLanguages() []string {
 	return []string{"c", "cpp"}
 }
 
-func (a *CFormatStringAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *CFormatStringAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "C-FORMAT-001"
 		name     = "C/C++ Format String Vulnerability"

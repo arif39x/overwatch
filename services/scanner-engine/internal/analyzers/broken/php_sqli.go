@@ -16,7 +16,7 @@ func (a *PHPSQLIAnalyzer) SupportedLanguages() []string {
 	return []string{"php"}
 }
 
-func (a *PHPSQLIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *PHPSQLIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "PHP-SQLI-001"
 		name     = "SQL Injection (PHP)"

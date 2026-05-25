@@ -18,7 +18,7 @@ func (a *GoXXEAnalyzer) SupportedLanguages() []string {
 	return []string{"go"}
 }
 
-func (a *GoXXEAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *GoXXEAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "GO-XXE-001"
 		name     = "Go XXE"

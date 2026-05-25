@@ -16,7 +16,7 @@ func (a *CmdIAnalyzer) SupportedLanguages() []string {
 	return []string{"go"}
 }
 
-func (a *CmdIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *CmdIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "GO-CMDI-001"
 		name     = "Potential Command Injection"

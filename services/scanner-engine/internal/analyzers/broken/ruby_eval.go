@@ -16,7 +16,7 @@ func (a *RubyEvalAnalyzer) SupportedLanguages() []string {
 	return []string{"ruby"}
 }
 
-func (a *RubyEvalAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *RubyEvalAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "RUBY-EVAL-001"
 		name     = "Ruby Code Execution"

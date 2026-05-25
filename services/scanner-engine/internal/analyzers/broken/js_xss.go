@@ -18,7 +18,7 @@ func (a *JSXXSAnalyzer) SupportedLanguages() []string {
 	return []string{"javascript", "typescript"}
 }
 
-func (a *JSXXSAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *JSXXSAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "JS-XSS-001"
 		name     = "JavaScript Cross-Site Scripting"

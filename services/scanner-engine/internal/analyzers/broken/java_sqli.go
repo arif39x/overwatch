@@ -18,7 +18,7 @@ func (a *JavaSQLIAnalyzer) SupportedLanguages() []string {
 	return []string{"java"}
 }
 
-func (a *JavaSQLIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string) []finding.Finding {
+func (a *JavaSQLIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string, symbolTable *sourcecode.SymbolTable) []finding.Finding {
 	const (
 		ruleID   = "JAVA-SQLI-001"
 		name     = "Java SQL Injection"
