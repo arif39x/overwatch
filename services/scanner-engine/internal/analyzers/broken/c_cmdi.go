@@ -48,13 +48,18 @@ func (a *CCMDIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath strin
 						if (firstArg.Type() == "identifier" && taintedVars[firstArgText]) ||
 						   firstArg.Type() == "binary_expression" {
 							
-							findings = append(findings, NewFinding(
+							f := finding.NewFinding(
 								ruleID, name, severity, filePath,
 								sourcecode.PositionToLine(n),
 								message, cwe, firstArgText,
-								"c", "HIGH", "Avoid using system() or popen() with user-controlled input. Use exec*() family of functions with arguments passed as an array.",
+								"c", finding.ConfidenceHigh, "Avoid using system() or popen() with user-controlled input. Use exec*() family of functions with arguments passed as an array.",
 								[]string{"https://owasp.org/www-community/attacks/Command_Injection"},
-							))
+							)
+							f.Evidence = []finding.EvidenceItem{
+								{Type: "DIRECT_SOURCE", Description: "Tainted argument reaches system() or popen()"},
+								{Type: "SINK_CONFIRMED_BY_TYPE", Description: "Command execution sink identified via taint analysis"},
+							}
+							findings = append(findings, f)
 						}
 					}
 				}

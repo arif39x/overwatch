@@ -40,13 +40,17 @@ func (a *GoXXEAnalyzer) Analyze(node *sitter.Node, source []byte, filePath strin
 			if fnNode != nil {
 				fnName := sourcecode.GetNodeText(fnNode, source)
 				if strings.Contains(fnName, "xml.NewDecoder") {
-					findings = append(findings, NewFinding(
+					f := finding.NewFinding(
 						ruleID, name, severity, filePath,
 						sourcecode.PositionToLine(n),
 						message, cwe, "xml.NewDecoder",
-						"go", "MEDIUM", "Ensure that the XML parser is configured to disallow external entities if using a custom entity resolver.",
+						"go", finding.ConfidenceMedium, "Ensure that the XML parser is configured to disallow external entities if using a custom entity resolver.",
 						[]string{"https://owasp.org/www-community/vulnerabilities/XML_External_Entity_(XXE)_Processing"},
-					))
+					)
+					f.Evidence = []finding.EvidenceItem{
+						{Type: "SINK_CONFIRMED_BY_TYPE", Description: "XML decoder without external entity protection"},
+					}
+					findings = append(findings, f)
 				}
 			}
 		}

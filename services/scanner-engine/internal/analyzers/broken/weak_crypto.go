@@ -39,13 +39,17 @@ func (a *WeakCryptoAnalyzer) Analyze(node *sitter.Node, source []byte, filePath 
 		content := n.Content(source)
 		for _, algo := range weakAlgos {
 			if strings.Contains(content, algo) {
-				findings = append(findings, NewFinding(
+				f := finding.NewFinding(
 					ruleID, name, severity, filePath,
 					sourcecode.PositionToLine(n),
 					message, cwe, sourcecode.GetNodeText(n, source),
-					"go", "HIGH", "Use stronger algorithms like SHA-256 or SHA-3.",
+					"go", finding.ConfidenceHigh, "Use stronger algorithms like SHA-256 or SHA-3.",
 					[]string{"https://owasp.org/www-community/vulnerabilities/Insecure_Cryptographic_Storage"},
-				))
+				)
+				f.Evidence = []finding.EvidenceItem{
+					{Type: "SINK_CONFIRMED_BY_TYPE", Description: "Weak cryptographic algorithm referenced"},
+				}
+				findings = append(findings, f)
 			}
 		}
 

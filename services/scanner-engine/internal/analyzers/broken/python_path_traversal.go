@@ -51,13 +51,18 @@ func (a *PythonPathTraversalAnalyzer) Analyze(node *sitter.Node, source []byte, 
 							   arg.Type() == "binary_operator" ||
 							   arg.Type() == "f_string" {
 								
-								findings = append(findings, NewFinding(
+								f := finding.NewFinding(
 									ruleID, name, severity, filePath,
 									sourcecode.PositionToLine(n),
 									message, cwe, argText,
-									"python", "HIGH", "Validate file paths and use os.path.basename() on user input.",
+									"python", finding.ConfidenceHigh, "Validate file paths and use os.path.basename() on user input.",
 									[]string{"https://owasp.org/www-community/attacks/Path_Traversal"},
-								))
+								)
+								f.Evidence = []finding.EvidenceItem{
+									{Type: "DIRECT_SOURCE", Description: "Tainted data used in file path construction"},
+									{Type: "SINK_CONFIRMED_BY_TYPE", Description: "Path traversal sink identified via taint analysis"},
+								}
+								findings = append(findings, f)
 								break
 							}
 						}

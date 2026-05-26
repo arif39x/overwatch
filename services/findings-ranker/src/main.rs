@@ -8,6 +8,7 @@ use std::io::{self, Read, Write};
 
 use finding_deduplicator::dedup_and_rank;
 use finding_models::{Finding, FindingEnvelope, Metadata};
+use severity_scorer::compute_final_score;
 
 #[derive(Debug)]
 struct ValidationError(String);
@@ -59,10 +60,20 @@ fn run() -> Result<(), Box<dyn Error>> {
     }
 
     let ranked_findings = dedup_and_rank(envelope.findings);
-    
+
+    let scored: Vec<f64> = ranked_findings.iter().map(|f| {
+        compute_final_score(f, &[])
+    }).collect();
+
+    let sorted: Vec<Finding> = {
+        let mut paired: Vec<(&Finding, f64)> = ranked_findings.iter().zip(scored.iter()).map(|(f, s)| (f, *s)).collect();
+        paired.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
+        paired.into_iter().map(|(f, _)| f.clone()).collect()
+    };
+
     let response = FindingEnvelope {
         metadata: envelope.metadata,
-        findings: ranked_findings,
+        findings: sorted,
         error: None,
     };
 
@@ -101,6 +112,9 @@ fn validate_findings(findings: &[Finding]) -> Result<(), ValidationError> {
         }
         if finding.confidence.trim().is_empty() {
             return Err(ValidationError("finding validation: missing confidence".to_string()));
+        }
+        if !matches!(finding.confidence.as_str(), "DEFINITE" | "HIGH_CONFIDENCE" | "MEDIUM_CONFIDENCE" | "LOW_CONFIDENCE") {
+            return Err(ValidationError(format!("finding validation: invalid confidence value '{}'", finding.confidence)));
         }
     }
     Ok(())

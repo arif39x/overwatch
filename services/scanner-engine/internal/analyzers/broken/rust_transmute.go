@@ -40,13 +40,17 @@ func (a *RustTransmuteAnalyzer) Analyze(node *sitter.Node, source []byte, filePa
 			if fnNode != nil {
 				fnName := sourcecode.GetNodeText(fnNode, source)
 				if strings.Contains(fnName, "transmute") {
-					findings = append(findings, NewFinding(
+					f := finding.NewFinding(
 						ruleID, name, severity, filePath,
 						sourcecode.PositionToLine(n),
 						message, cwe, fnName,
-						"rust", "HIGH", "Prefer safer alternatives like 'as' casts, or specific conversion methods like 'from_bits', 'from_ne_bytes', etc.",
+						"rust", finding.ConfidenceHigh, "Prefer safer alternatives like 'as' casts, or specific conversion methods like 'from_bits', 'from_ne_bytes', etc.",
 						[]string{"https://doc.rust-lang.org/std/mem/fn.transmute.html"},
-					))
+					)
+					f.Evidence = []finding.EvidenceItem{
+						{Type: "SINK_CONFIRMED_BY_TYPE", Description: "Unsafe transmute call detected"},
+					}
+					findings = append(findings, f)
 				}
 			}
 		}

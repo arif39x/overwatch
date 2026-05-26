@@ -41,13 +41,17 @@ func (a *JavaWeakCryptoAnalyzer) Analyze(node *sitter.Node, source []byte, fileP
 			   strings.Contains(strings.ToUpper(text), "SHA1") ||
 			   strings.Contains(strings.ToUpper(text), "SHA-1") {
 				
-				findings = append(findings, NewFinding(
+				f := finding.NewFinding(
 					ruleID, name, severity, filePath,
 					sourcecode.PositionToLine(n),
 					message, cwe, text,
-					"java", "MEDIUM", "Use stronger cryptographic algorithms like SHA-256 or SHA-3.",
+					"java", finding.ConfidenceMedium, "Use stronger cryptographic algorithms like SHA-256 or SHA-3.",
 					[]string{"https://owasp.org/www-community/vulnerabilities/Insecure_Cryptographic_Storage"},
-				))
+				)
+				f.Evidence = []finding.EvidenceItem{
+					{Type: "SINK_CONFIRMED_BY_TYPE", Description: "Weak cryptographic algorithm detected"},
+				}
+				findings = append(findings, f)
 			}
 		}
 

@@ -39,13 +39,18 @@ func (a *PHPFileInclusionAnalyzer) Analyze(node *sitter.Node, source []byte, fil
 			for i := 0; i < int(n.ChildCount()); i++ {
 				child := n.Child(i)
 				if child.Type() == "variable_name" && taintedVars[child.Content(source)] {
-					findings = append(findings, NewFinding(
+					f := finding.NewFinding(
 						ruleID, name, severity, filePath,
 						sourcecode.PositionToLine(n),
 						message, cwe, sourcecode.GetNodeText(child, source),
-						"php", "HIGH", "Do not use user input to construct file paths for inclusion.",
+						"php", finding.ConfidenceHigh, "Do not use user input to construct file paths for inclusion.",
 						[]string{"https://owasp.org/www-project-top-ten/2017/A1_2017-Injection"},
-					))
+					)
+					f.Evidence = []finding.EvidenceItem{
+						{Type: "DIRECT_SOURCE", Description: "Tainted variable used in file inclusion construct"},
+						{Type: "SINK_CONFIRMED_BY_TYPE", Description: "File inclusion sink identified via AST pattern"},
+					}
+					findings = append(findings, f)
 				}
 			}
 		}

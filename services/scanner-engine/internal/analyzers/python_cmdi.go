@@ -30,13 +30,19 @@ func (a *PythonCMDIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath 
 	visit = func(n *sitter.Node) {
 		if n.Type() == "call" {
 			
-			findings = append(findings, finding.NewFinding(
+			f := finding.NewFinding(
 				"PY-CMDI-001", "Python Command Injection", "CRITICAL", filePath,
 				sourcecode.PositionToLine(n),
 				"OS command built with tainted data", "CWE-78", n.Content(source),
-				"python", "HIGH", "Avoid using shell=True",
+				"python", finding.ConfidenceHigh, "Avoid using shell=True",
 				[]string{"https://owasp.org/www-community/attacks/Command_Injection"},
-			))
+			)
+			f.Evidence = []finding.EvidenceItem{
+				{Type: "DIRECT_SOURCE", Description: "HTTP parameter or user input directly reaches OS command"},
+				{Type: "SANITIZER_ABSENT", Description: "No sanitizer applied to command argument"},
+			}
+			f.TaintSourceIdentifier = n.Content(source)
+			findings = append(findings, f)
 		}
 		for i := 0; i < int(n.ChildCount()); i++ {
 			visit(n.Child(i))

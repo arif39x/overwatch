@@ -43,13 +43,17 @@ func (a *JavaSecretsAnalyzer) Analyze(node *sitter.Node, source []byte, filePath
 				if secretRegex.MatchString(varName) {
 					valNode := n.ChildByFieldName("value")
 					if valNode != nil && valNode.Type() == "string_literal" {
-						findings = append(findings, NewFinding(
+						f := finding.NewFinding(
 							ruleID, name, severity, filePath,
 							sourcecode.PositionToLine(n),
 							message, cwe, varName,
-							"java", "MEDIUM", "Use environment variables or a secret management service to store sensitive information.",
+							"java", finding.ConfidenceMedium, "Use environment variables or a secret management service to store sensitive information.",
 							[]string{"https://owasp.org/www-community/vulnerabilities/Use_of_hard-coded_credentials"},
-						))
+						)
+						f.Evidence = []finding.EvidenceItem{
+							{Type: "SINK_CONFIRMED_BY_TYPE", Description: "Hard-coded secret detected via naming pattern"},
+						}
+						findings = append(findings, f)
 					}
 				}
 			}

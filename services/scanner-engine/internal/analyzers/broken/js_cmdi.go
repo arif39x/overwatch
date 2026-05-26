@@ -50,13 +50,18 @@ func (a *JSCMDIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath stri
 						   firstArg.Type() == "binary_expression" ||
 						   firstArg.Type() == "template_string" {
 							
-							findings = append(findings, NewFinding(
+							f := finding.NewFinding(
 								ruleID, name, severity, filePath,
 								sourcecode.PositionToLine(n),
 								message, cwe, firstArgText,
-								"javascript", "HIGH", "Use child_process.execFile or child_process.spawn without shell: true, and pass arguments as an array.",
+								"javascript", finding.ConfidenceHigh, "Use child_process.execFile or child_process.spawn without shell: true, and pass arguments as an array.",
 								[]string{"https://owasp.org/www-community/attacks/Command_Injection"},
-							))
+							)
+							f.Evidence = []finding.EvidenceItem{
+								{Type: "DIRECT_SOURCE", Description: "Tainted argument reaches command execution sink"},
+								{Type: "SANITIZER_ABSENT", Description: "No sanitizer applied to command argument"},
+							}
+							findings = append(findings, f)
 						}
 					}
 				}

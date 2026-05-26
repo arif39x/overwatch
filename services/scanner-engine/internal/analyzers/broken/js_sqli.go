@@ -51,13 +51,18 @@ func (a *JSSQLIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath stri
 							   arg.Type() == "binary_expression" ||
 							   arg.Type() == "template_string" {
 								
-								findings = append(findings, NewFinding(
+								f := finding.NewFinding(
 									ruleID, name, severity, filePath,
 									sourcecode.PositionToLine(n),
 									message, cwe, argText,
-									"javascript", "HIGH", "Use parameterized queries or ORM features to handle user input safely.",
+									"javascript", finding.ConfidenceHigh, "Use parameterized queries or ORM features to handle user input safely.",
 									[]string{"https://owasp.org/www-community/attacks/SQL_Injection"},
-								))
+								)
+								f.Evidence = []finding.EvidenceItem{
+									{Type: "DIRECT_SOURCE", Description: "Tainted data reaches SQL query sink"},
+									{Type: "SINK_CONFIRMED_BY_TYPE", Description: "SQL injection sink identified via taint analysis"},
+								}
+								findings = append(findings, f)
 								break
 							}
 						}

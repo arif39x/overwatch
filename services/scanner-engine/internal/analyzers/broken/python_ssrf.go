@@ -54,13 +54,18 @@ func (a *PythonSSRFAnalyzer) Analyze(node *sitter.Node, source []byte, filePath 
 							   arg.Type() == "binary_operator" ||
 							   arg.Type() == "f_string" {
 								
-								findings = append(findings, NewFinding(
+								f := finding.NewFinding(
 									ruleID, name, severity, filePath,
 									sourcecode.PositionToLine(n),
 									message, cwe, argText,
-									"python", "HIGH", "Validate and whitelist allowed domains/IPs for outgoing requests.",
+									"python", finding.ConfidenceHigh, "Validate and whitelist allowed domains/IPs for outgoing requests.",
 									[]string{"https://owasp.org/www-community/attacks/Server_Side_Request_Forgery"},
-								))
+								)
+								f.Evidence = []finding.EvidenceItem{
+									{Type: "DIRECT_SOURCE", Description: "Tainted data used in URL/request construction"},
+									{Type: "SINK_CONFIRMED_BY_TYPE", Description: "SSRF sink identified via taint analysis"},
+								}
+								findings = append(findings, f)
 								break
 							}
 						}

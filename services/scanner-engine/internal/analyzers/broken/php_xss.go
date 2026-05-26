@@ -38,13 +38,18 @@ func (a *PHPXSSAnalyzer) Analyze(node *sitter.Node, source []byte, filePath stri
 			for i := 0; i < int(n.ChildCount()); i++ {
 				child := n.Child(i)
 				if child.Type() == "variable_name" && taintedVars[child.Content(source)] {
-					findings = append(findings, NewFinding(
+					f := finding.NewFinding(
 						ruleID, name, severity, filePath,
 						sourcecode.PositionToLine(n),
 						message, cwe, sourcecode.GetNodeText(child, source),
-						"php", "HIGH", "Use htmlspecialchars() before echoing user input.",
+						"php", finding.ConfidenceHigh, "Use htmlspecialchars() before echoing user input.",
 						[]string{"https://www.php.net/manual/en/function.htmlspecialchars.php"},
-					))
+					)
+					f.Evidence = []finding.EvidenceItem{
+						{Type: "DIRECT_SOURCE", Description: "Tainted variable echoed directly to output"},
+						{Type: "SANITIZER_ABSENT", Description: "No HTML encoding applied to output"},
+					}
+					findings = append(findings, f)
 				}
 			}
 		}

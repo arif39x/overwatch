@@ -39,13 +39,18 @@ func (a *CBufferOverflowAnalyzer) Analyze(node *sitter.Node, source []byte, file
 			if fnNode != nil {
 				fnName := sourcecode.GetNodeText(fnNode, source)
 				if fnName == "strcpy" || fnName == "strcat" || fnName == "gets" || fnName == "sprintf" || fnName == "scanf" {
-					findings = append(findings, NewFinding(
+					f := finding.NewFinding(
 						ruleID, name, severity, filePath,
 						sourcecode.PositionToLine(n),
 						message, cwe, sourcecode.GetNodeText(n, source),
-						"c", "HIGH", "Use safer alternatives like strncpy, strncat, fgets, or snprintf.",
+						"c", finding.ConfidenceHigh, "Use safer alternatives like strncpy, strncat, fgets, or snprintf.",
 						[]string{"https://owasp.org/www-community/vulnerabilities/Buffer_Overflow"},
-					))
+					)
+					f.Evidence = []finding.EvidenceItem{
+						{Type: "DIRECT_SOURCE", Description: "Unsafe string function called with potential user data"},
+						{Type: "SANITIZER_ABSENT", Description: "No bounds checking applied before unsafe operation"},
+					}
+					findings = append(findings, f)
 				}
 			}
 		}

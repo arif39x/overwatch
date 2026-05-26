@@ -38,13 +38,18 @@ func (a *GoTLSConfigAnalyzer) Analyze(node *sitter.Node, source []byte, filePath
 			if keyNode != nil && sourcecode.GetNodeText(keyNode, source) == "InsecureSkipVerify" {
 				valNode := n.ChildByFieldName("value")
 				if valNode != nil && sourcecode.GetNodeText(valNode, source) == "true" {
-					findings = append(findings, NewFinding(
+					f := finding.NewFinding(
 						ruleID, name, severity, filePath,
 						sourcecode.PositionToLine(n),
 						message, cwe, "InsecureSkipVerify: true",
-						"go", "HIGH", "Set InsecureSkipVerify to false and properly configure RootCAs or use system certificates.",
+						"go", finding.ConfidenceHigh, "Set InsecureSkipVerify to false and properly configure RootCAs or use system certificates.",
 						[]string{"https://pkg.go.dev/crypto/tls#Config"},
-					))
+					)
+					f.Evidence = []finding.EvidenceItem{
+						{Type: "DIRECT_SOURCE", Description: "TLS InsecureSkipVerify set to true"},
+						{Type: "SINK_CONFIRMED_BY_TYPE", Description: "TLS configuration field identified in struct literal"},
+					}
+					findings = append(findings, f)
 				}
 			}
 		}

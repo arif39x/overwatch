@@ -42,13 +42,18 @@ func (a *CmdIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath string
 					for j := 0; j < int(child.ChildCount()); j++ {
 						arg := child.Child(j)
 						if arg.Type() == "identifier" && taintedVars[arg.Content(source)] {
-							findings = append(findings, NewFinding(
+							f := finding.NewFinding(
 								ruleID, name, severity, filePath,
 								sourcecode.PositionToLine(n),
 								message, cwe, sourcecode.GetNodeText(arg, source),
-								"go", "HIGH", "Avoid executing shell commands with user input.",
+								"go", finding.ConfidenceHigh, "Avoid executing shell commands with user input.",
 								[]string{"https://owasp.org/www-community/attacks/Command_Injection"},
-							))
+							)
+							f.Evidence = []finding.EvidenceItem{
+								{Type: "DIRECT_SOURCE", Description: "Tainted variable reaches command execution sink"},
+								{Type: "SINK_CONFIRMED_BY_TYPE", Description: "Command execution function identified via taint analysis"},
+							}
+							findings = append(findings, f)
 						}
 					}
 				}

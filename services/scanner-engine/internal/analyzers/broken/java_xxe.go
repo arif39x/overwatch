@@ -39,13 +39,17 @@ func (a *JavaXXEAnalyzer) Analyze(node *sitter.Node, source []byte, filePath str
 			if nameNode != nil && sourcecode.GetNodeText(nameNode, source) == "newInstance" {
 				objectNode := n.ChildByFieldName("object")
 				if objectNode != nil && sourcecode.GetNodeText(objectNode, source) == "DocumentBuilderFactory" {
-					findings = append(findings, NewFinding(
+					f := finding.NewFinding(
 						ruleID, name, severity, filePath,
 						sourcecode.PositionToLine(n),
 						message, cwe, "DocumentBuilderFactory.newInstance()",
-						"java", "MEDIUM", "Ensure that the DocumentBuilderFactory is configured to disallow DTDs and external entities.",
+						"java", finding.ConfidenceMedium, "Ensure that the DocumentBuilderFactory is configured to disallow DTDs and external entities.",
 						[]string{"https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html#java"},
-					))
+					)
+					f.Evidence = []finding.EvidenceItem{
+						{Type: "SINK_CONFIRMED_BY_TYPE", Description: "XML DocumentBuilderFactory without XXE protection"},
+					}
+					findings = append(findings, f)
 				}
 			}
 		}

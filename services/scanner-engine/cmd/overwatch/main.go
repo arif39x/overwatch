@@ -82,6 +82,7 @@ func runScan(args []string) int {
 	rulesDir := command.String("rules", "internal/rules", "Path to taint rules directory")
 	local := command.Bool("local", false, "Run in Lite mode (no Redis/Postgres)")
 	noSemantic := command.Bool("no-semantic", false, "Disable semantic analysis pass")
+	verbose := command.Bool("verbose", false, "Include evidence bundle in output")
 
 	if err := command.Parse(args); err != nil {
 		fmt.Fprintf(os.Stderr, "parse scan flags: %v\n", err)
@@ -116,7 +117,7 @@ func runScan(args []string) int {
 			fmt.Fprintf(os.Stderr, "failed to init sqlite: %v\n", err)
 			return 2
 		}
-		findings, errRanker = processWithFindingsRanker(findings)
+		findings, errRanker = processWithFindingsRanker(findings, *verbose)
 	} else {
 		redisURL := os.Getenv("OVERWATCH_REDIS_URL")
 		if redisURL == "" {
@@ -131,7 +132,7 @@ func runScan(args []string) int {
 				fmt.Fprintf(os.Stderr, "failed to init postgres: %v\n", err)
 			}
 		}
-		findings, errRanker = processWithFindingsRanker(findings)
+		findings, errRanker = processWithFindingsRanker(findings, *verbose)
 	}
 
 	if errRanker != nil {
@@ -179,7 +180,7 @@ func runScan(args []string) int {
 	return 0
 }
 
-func processWithFindingsRanker(findings []finding.Finding) ([]finding.Finding, error) {
+func processWithFindingsRanker(findings []finding.Finding, verbose bool) ([]finding.Finding, error) {
 	if len(findings) == 0 {
 		return findings, nil
 	}
@@ -215,6 +216,13 @@ func processWithFindingsRanker(findings []finding.Finding) ([]finding.Finding, e
 		return nil, fmt.Errorf("unmarshal ranker output: %w", err)
 	}
 
+	
+	if !verbose {
+		for i := range envelope.Findings {
+			envelope.Findings[i].Evidence = nil
+		}
+	}
+
 	return envelope.Findings, nil
 }
 
@@ -222,7 +230,14 @@ func renderFindings(findings []finding.Finding, format string) ([]byte, error) {
 	if format == "text" {
 		var buf bytes.Buffer
 		for _, f := range findings {
-			fmt.Fprintf(&buf, "[%s] %s in %s:%d\n  %s\n\n", f.Severity, f.Name, f.File, f.Line, f.Message)
+			fmt.Fprintf(&buf, "[%s] %s in %s:%d\n  %s\n", f.Severity, f.Name, f.File, f.Line, f.Message)
+			if len(f.Evidence) > 0 {
+				fmt.Fprintf(&buf, "  Evidence:\n")
+				for _, e := range f.Evidence {
+					fmt.Fprintf(&buf, "    - %s: %s\n", e.Type, e.Description)
+				}
+			}
+			fmt.Fprintln(&buf)
 		}
 		return buf.Bytes(), nil
 	}
@@ -238,6 +253,7 @@ func runCI(args []string) int {
 	format := command.String("format", "json", "Output format (json or sarif)")
 	rulesDir := command.String("rules", "internal/rules", "Path to taint rules directory")
 	noSemantic := command.Bool("no-semantic", false, "Disable semantic analysis pass")
+	verbose := command.Bool("verbose", false, "Include evidence bundle in output")
 
 	if err := command.Parse(args); err != nil {
 		fmt.Fprintf(os.Stderr, "parse ci flags: %v\n", err)
@@ -259,7 +275,7 @@ func runCI(args []string) int {
 	}
 
 	findings := analyzers.RunAll(files)
-	findings, err = processWithFindingsRanker(findings)
+	findings, err = processWithFindingsRanker(findings, *verbose)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "findings ranker failed: %v\n", err)
 		return 2

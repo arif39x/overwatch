@@ -36,13 +36,17 @@ func (a *JavaDeserializeAnalyzer) Analyze(node *sitter.Node, source []byte, file
 		if n.Type() == "method_invocation" {
 			nameNode := n.ChildByFieldName("name")
 			if nameNode != nil && sourcecode.GetNodeText(nameNode, source) == "readObject" {
-				findings = append(findings, NewFinding(
+				f := finding.NewFinding(
 					ruleID, name, severity, filePath,
 					sourcecode.PositionToLine(n),
 					message, cwe, "readObject()",
-					"java", "MEDIUM", "Avoid deserializing untrusted data. Use safer alternatives like JSON or XML with proper security configurations, or use look-ahead deserialization.",
+					"java", finding.ConfidenceMedium, "Avoid deserializing untrusted data. Use safer alternatives like JSON or XML with proper security configurations, or use look-ahead deserialization.",
 					[]string{"https://owasp.org/www-community/vulnerabilities/Deserialization_of_untrusted_data"},
-				))
+				)
+				f.Evidence = []finding.EvidenceItem{
+					{Type: "SINK_CONFIRMED_BY_TYPE", Description: "Java deserialization via readObject()"},
+				}
+				findings = append(findings, f)
 			}
 		}
 

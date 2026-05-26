@@ -45,13 +45,17 @@ func (a *RubySecretAnalyzer) Analyze(node *sitter.Node, source []byte, filePath 
 						for i := 0; i < int(parent.ChildCount()); i++ {
 							child := parent.Child(i)
 							if child.Type() == "string" {
-								findings = append(findings, NewFinding(
+								f := finding.NewFinding(
 									ruleID, name, severity, filePath,
 									sourcecode.PositionToLine(n),
 									message, cwe, sourcecode.GetNodeText(parent, source),
-									"ruby", "MEDIUM", "Move secrets to environment variables.",
+									"ruby", finding.ConfidenceMedium, "Move secrets to environment variables.",
 									[]string{"https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html"},
-								))
+								)
+								f.Evidence = []finding.EvidenceItem{
+									{Type: "SINK_CONFIRMED_BY_TYPE", Description: "Hard-coded secret detected via naming pattern"},
+								}
+								findings = append(findings, f)
 							}
 						}
 					}

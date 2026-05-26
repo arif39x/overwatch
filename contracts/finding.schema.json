@@ -12,7 +12,10 @@
     "cwe": { "type": "string" },
     "snippet": { "type": "string" },
     "language": { "type": "string" },
-    "confidence": { "type": "string" },
+    "confidence": {
+      "type": "string",
+      "enum": ["DEFINITE", "HIGH_CONFIDENCE", "MEDIUM_CONFIDENCE", "LOW_CONFIDENCE"]
+    },
     "fix_guidance": { "type": ["string", "null"] },
     "references": {
       "type": "array",
@@ -31,7 +34,19 @@
     },
     "poc_verified": { "type": "boolean" },
     "poc_signal": { "type": "string" },
-    "poc_status": { "type": "string" }
+    "poc_status": { "type": "string" },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string" },
+          "description": { "type": "string" }
+        },
+        "required": ["type", "description"]
+      }
+    },
+    "taint_source_identifier": { "type": "string" }
   },
   "required": [
     "rule_id",

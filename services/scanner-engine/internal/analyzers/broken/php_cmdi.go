@@ -42,13 +42,18 @@ func (a *PHPCmdIAnalyzer) Analyze(node *sitter.Node, source []byte, filePath str
 					for j := 0; j < int(child.ChildCount()); j++ {
 						arg := child.Child(j)
 						if arg.Type() == "variable_name" && taintedVars[arg.Content(source)] {
-							findings = append(findings, NewFinding(
+							f := finding.NewFinding(
 								ruleID, name, severity, filePath,
 								sourcecode.PositionToLine(n),
 								message, cwe, sourcecode.GetNodeText(arg, source),
-								"php", "HIGH", "Avoid executing shell commands with user input. Use escapeshellarg().",
+								"php", finding.ConfidenceHigh, "Avoid executing shell commands with user input. Use escapeshellarg().",
 								[]string{"https://www.php.net/manual/en/function.escapeshellarg.php"},
-							))
+							)
+							f.Evidence = []finding.EvidenceItem{
+								{Type: "DIRECT_SOURCE", Description: "Tainted variable reaches command execution sink"},
+								{Type: "SANITIZER_ABSENT", Description: "No sanitizer applied to command argument"},
+							}
+							findings = append(findings, f)
 						}
 					}
 				}
