@@ -1,12 +1,40 @@
-- language: go
+- id: SAN-GO-001
+  language: go
   kind: function_call
   identifier: html.EscapeString
-- language: go
+  rule_version: 1
+  introduced_at: "2025-01-15"
+  last_validated_at: "2025-06-01"
+  framework: html
+  min_framework_version: ""
+  max_framework_version: ""
+- id: SAN-GO-002
+  language: go
   kind: function_call
   identifier: sqlx.Rebind
-- language: python
+  rule_version: 1
+  introduced_at: "2025-01-15"
+  last_validated_at: "2025-06-01"
+  framework: jmoiron/sqlx
+  min_framework_version: "1.0"
+  max_framework_version: ""
+- id: SAN-PY-001
+  language: python
   kind: function_call
   identifier: shlex.quote
-- language: javascript
+  rule_version: 1
+  introduced_at: "2025-01-15"
+  last_validated_at: "2025-06-01"
+  framework: shlex
+  min_framework_version: ""
+  max_framework_version: ""
+- id: SAN-JS-001
+  language: javascript
   kind: function_call
   identifier: validator.escape
+  rule_version: 1
+  introduced_at: "2025-01-15"
+  last_validated_at: "2025-06-01"
+  framework: validator
+  min_framework_version: "10.0"
+  max_framework_version: ""

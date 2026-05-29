@@ -299,9 +299,15 @@ func Compile(oql string) (*Query, error) {
 
 
 type Rule struct {
-	ID         string `yaml:"id"`
-	Language   string `yaml:"language"`
-	Kind       string `yaml:"kind"`
-	Identifier string `yaml:"identifier"`
-	VulnClass  string `yaml:"vuln_class,omitempty"`
+	ID                  string `yaml:"id"`
+	Language            string `yaml:"language"`
+	Kind                string `yaml:"kind"`
+	Identifier          string `yaml:"identifier"`
+	VulnClass           string `yaml:"vuln_class,omitempty"`
+	RuleVersion         int    `yaml:"rule_version"`
+	IntroducedAt        string `yaml:"introduced_at"`
+	LastValidatedAt     string `yaml:"last_validated_at"`
+	Framework           string `yaml:"framework,omitempty"`
+	MinFrameworkVersion string `yaml:"min_framework_version,omitempty"`
+	MaxFrameworkVersion string `yaml:"max_framework_version,omitempty"`
 }

@@ -2,7 +2,7 @@ SHELL := /bin/bash
 ROOT_DIR := $(shell pwd)
 BIN_DIR := $(ROOT_DIR)/bin
 
-.PHONY: dev build-bins infra-up test-contracts lint-schema clean help
+.PHONY: dev build-bins infra-up test-contracts test-rules lint-schema clean help
 
 help:
 	@echo "Overwatch Development Makefile"
@@ -10,6 +10,7 @@ help:
 	@echo "  make build-bins      - Build Go and Rust binaries"
 	@echo "  make infra-up        - Start Redis and Postgres via Docker Compose"
 	@echo "  make test-contracts  - Run contract compatibility tests"
+	@echo "  make test-rules      - Run rule regression tests against testdata corpus"
 	@echo "  make lint-schema     - Validate JSON schemas"
 	@echo "  make clean           - Remove binaries and stop infrastructure"
 
@@ -39,6 +40,18 @@ lint-schema:
 test-contracts: lint-schema
 	@echo "Running contract integration tests..."
 	@if [ -f sh/test_contracts.py ]; then python3 sh/test_contracts.py; else echo "sh/test_contracts.py not found, skipping."; fi
+
+test-rules:
+	@echo "Building scanner-engine binary..."
+	@cd services/scanner-engine && go build -o overwatch ./cmd/overwatch
+	@if [ ! -f services/scanner-engine/bin/findings-ranker ]; then \
+		mkdir -p services/scanner-engine/bin; \
+		printf '#!/usr/bin/env python3\nimport json,sys\ndata=json.load(sys.stdin)\nif "findings" in data:\n\tprint(json.dumps({"findings":data["findings"]}))\nelse:\n\tprint(json.dumps({"findings":[]}))\n' > services/scanner-engine/bin/findings-ranker; \
+		chmod +x services/scanner-engine/bin/findings-ranker; \
+	fi
+	@echo "Running rule regression tests..."
+	@cd services/scanner-engine && python3 sh/test_rules.py --binary ./overwatch --rules-dir internal/rules; \
+	if [ $$? -eq 0 ]; then echo "All rule tests passed."; else echo "Rule tests FAILED."; exit 1; fi
 
 clean:
 	rm -rf bin/

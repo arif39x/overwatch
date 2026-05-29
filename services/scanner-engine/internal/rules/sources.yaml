@@ -1,18 +1,60 @@
-- language: go
+- id: SRC-GO-001
+  language: go
   kind: function_call
   identifier: os.Getenv
-- language: go
+  rule_version: 1
+  introduced_at: "2025-01-15"
+  last_validated_at: "2025-06-01"
+  framework: ""
+  min_framework_version: ""
+  max_framework_version: ""
+- id: SRC-GO-002
+  language: go
   kind: parameter
   identifier: req
-- language: python
+  rule_version: 1
+  introduced_at: "2025-01-15"
+  last_validated_at: "2025-06-01"
+  framework: net/http
+  min_framework_version: ""
+  max_framework_version: ""
+- id: SRC-PY-001
+  language: python
   kind: function_call
   identifier: os.getenv
-- language: python
+  rule_version: 1
+  introduced_at: "2025-01-15"
+  last_validated_at: "2025-06-01"
+  framework: ""
+  min_framework_version: ""
+  max_framework_version: ""
+- id: SRC-PY-002
+  language: python
   kind: function_call
   identifier: request.args.get
-- language: javascript
+  rule_version: 1
+  introduced_at: "2025-01-15"
+  last_validated_at: "2025-06-01"
+  framework: flask
+  min_framework_version: "2.0"
+  max_framework_version: ""
+- id: SRC-JS-001
+  language: javascript
   kind: function_call
   identifier: req.query
-- language: typescript
+  rule_version: 1
+  introduced_at: "2025-01-15"
+  last_validated_at: "2025-06-01"
+  framework: express
+  min_framework_version: "4.0"
+  max_framework_version: ""
+- id: SRC-TS-001
+  language: typescript
   kind: function_call
   identifier: req.query
+  rule_version: 1
+  introduced_at: "2025-01-15"
+  last_validated_at: "2025-06-01"
+  framework: express
+  min_framework_version: "4.0"
+  max_framework_version: ""

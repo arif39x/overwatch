@@ -1,0 +1,7 @@
+[
+  {
+    "rule_id": "GO-CRYPTO-001",
+    "file": "main.go",
+    "severity": "MEDIUM"
+  }
+]

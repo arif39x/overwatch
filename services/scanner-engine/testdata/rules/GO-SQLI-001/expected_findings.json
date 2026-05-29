@@ -1,0 +1,7 @@
+[
+  {
+    "rule_id": "GO-SQLI-001",
+    "file": "main.go",
+    "severity": "CRITICAL"
+  }
+]
